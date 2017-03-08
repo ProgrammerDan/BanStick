@@ -103,7 +103,7 @@ public class BSIP {
 			while (rs.next()) {
 				BSIP bsip = new BSIP();
 				bsip.iid = rs.getLong(1);
-				if (allIPId.containsKey(bsip.iid)) {
+				if (!BanStick.slave() && allIPId.containsKey(bsip.iid)) {
 					returns.add(allIPId.get(bsip.iid));
 					continue;
 				}
@@ -236,7 +236,7 @@ public class BSIP {
 		IPAddressString ips = new IPAddressString(netAddress + "/" + CIDR);
 		//BanStick.getPlugin().debug("Check for CIDR IP: {0}", ips.toString());
 		IPAddress lookup = ips.getAddress();
-		if (allIPNA.containsKey(lookup)) {
+		if (!BanStick.slave() && allIPNA.containsKey(lookup)) {
 			return allIPNA.get(lookup);
 		}
 		try (Connection connection = BanStickDatabaseHandler.getinstanceData().getConnection();) {
@@ -277,7 +277,7 @@ public class BSIP {
 	
 	public static BSIP byIPAddress(IPAddress lookup) {
 		//BanStick.getPlugin().debug("Check for IP: {0}", lookup.toString());
-		if (allIPNA.containsKey(lookup)) {
+		if (!BanStick.slave() && allIPNA.containsKey(lookup)) {
 			return allIPNA.get(lookup);
 		}
 		try (Connection connection = BanStickDatabaseHandler.getinstanceData().getConnection();) {
@@ -312,7 +312,7 @@ public class BSIP {
 	 * @return The exact IP data record or null if not found
 	 */
 	public static BSIP byId(long iid) {
-		if (allIPId.containsKey(iid)) {
+		if (!BanStick.slave() && allIPId.containsKey(iid)) {
 			return allIPId.get(iid);
 		}
 		try (Connection connection = BanStickDatabaseHandler.getinstanceData().getConnection();
@@ -332,7 +332,7 @@ public class BSIP {
 			// found
 			BSIP bsip = new BSIP();
 			bsip.iid = rs.getLong(1);
-			if (BSIP.allIPId.containsKey(bsip.iid)) {
+			if (!BanStick.slave() && BSIP.allIPId.containsKey(bsip.iid)) {
 				return BSIP.allIPId.get(bsip.iid);
 			}
 			bsip.createTime = rs.getTimestamp(2);
@@ -382,7 +382,7 @@ public class BSIP {
 	}
 	
 	public static BSIP create(IPAddress lookup) {
-		if (allIPNA.containsKey(lookup)) {
+		if (!BanStick.slave() && allIPNA.containsKey(lookup)) {
 			return allIPNA.get(lookup);
 		}
 		try (Connection connection = BanStickDatabaseHandler.getinstanceData().getConnection();
@@ -440,7 +440,7 @@ public class BSIP {
 	public static BSIP create(IPAddress lookup, int CIDR) {
 		// TODO: reconsider the CIDR handling in the caching and saving and such.
 		//   might not be necessary to separate out the CIDR like I am here.
-		if (allIPNA.containsKey(lookup)) {
+		if (!BanStick.slave() && allIPNA.containsKey(lookup)) {
 			return allIPNA.get(lookup);
 		}
 		try (Connection connection = BanStickDatabaseHandler.getinstanceData().getConnection();
@@ -501,7 +501,7 @@ public class BSIP {
 					BSIP bsip = new BSIP();
 					bsip.iid = rs.getLong(1);
 					if (bsip.iid > maxId) maxId = bsip.iid;
-					if (BSIP.allIPId.containsKey(bsip.iid)) { // already cached.
+					if (!BanStick.slave() && BSIP.allIPId.containsKey(bsip.iid)) { // already cached.
 						continue;
 					}
 					bsip.createTime = rs.getTimestamp(2);

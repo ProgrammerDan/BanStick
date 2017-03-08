@@ -198,7 +198,7 @@ public class BSBan {
 	}
 	
 	public static BSBan byId(long bid) {
-		if (allBanID.containsKey(bid)) {
+		if (!BanStick.slave() && allBanID.containsKey(bid)) {
 			return allBanID.get(bid);
 		}
 		try (Connection connection = BanStickDatabaseHandler.getinstanceData().getConnection();
@@ -270,7 +270,7 @@ public class BSBan {
 			try (ResultSet rs = findBans.executeQuery()) {
 				while(rs.next()) {
 					BSBan ban = extractBan(rs);
-					if (allBanID.containsKey(ban.bid)) {
+					if (!BanStick.slave() && allBanID.containsKey(ban.bid)) {
 						results.add(allBanID.get(ban.bid));
 					} else {
 						results.add(ban);
@@ -294,7 +294,7 @@ public class BSBan {
 			try (ResultSet rs = findBans.executeQuery()) {
 				while(rs.next()) {
 					BSBan ban = extractBan(rs);
-					if (allBanID.containsKey(ban.bid)) {
+					if (!BanStick.slave() && allBanID.containsKey(ban.bid)) {
 						results.add(allBanID.get(ban.bid));
 					} else {
 						results.add(ban);
@@ -318,7 +318,7 @@ public class BSBan {
 			try (ResultSet rs = findBans.executeQuery()) {
 				while(rs.next()) {
 					BSBan ban = extractBan(rs);
-					if (allBanID.containsKey(ban.bid)) {
+					if (!BanStick.slave() && allBanID.containsKey(ban.bid)) {
 						results.add(allBanID.get(ban.bid));
 					} else {
 						results.add(ban);
@@ -506,6 +506,7 @@ public class BSBan {
 	 * @return last ID encountered, or -1 if none.
 	 */
 	public static long preload(long offset, int limit, boolean includeExpired) {
+		if (BanStick.slave()) return -1; 
 		long maxId = -1;
 		try (Connection connection = BanStickDatabaseHandler.getinstanceData().getConnection();
 				PreparedStatement loadBans = connection.prepareStatement(

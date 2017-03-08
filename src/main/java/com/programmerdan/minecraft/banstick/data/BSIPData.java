@@ -169,7 +169,7 @@ public class BSIPData {
 	}
 
 	public static BSIPData byId(long idid) {
-		if (allIPDataID.containsKey(idid)) {
+		if (!BanStick.slave() && allIPDataID.containsKey(idid)) {
 			return allIPDataID.get(idid);
 		}
 		try (Connection connection = BanStickDatabaseHandler.getinstanceData().getConnection();
@@ -236,7 +236,7 @@ public class BSIPData {
 			getId.setLong(1, ip.getId());
 			try (ResultSet rs = getId.executeQuery();) {
 				if (rs.next()) {
-					if (allIPDataID.containsKey(rs.getLong(1))) {
+					if (!BanStick.slave() && allIPDataID.containsKey(rs.getLong(1))) {
 						return allIPDataID.get(rs.getLong(1));
 					}
 					BSIPData data = extractData(rs);
